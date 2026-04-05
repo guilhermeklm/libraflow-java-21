@@ -48,7 +48,7 @@ ARG SKIP_TESTS=false
 
 COPY src/ src/
 
-RUN ./mvnw test --no-transfer-progress -B \
+RUN ./mvnw test \
     -DskipTests=${SKIP_TESTS} \
     -Dsurefire.excludes="**/LibraflowApplicationTests.java"
 
@@ -60,10 +60,7 @@ FROM deps AS build
 
 COPY src/ src/
 
-RUN ./mvnw package --no-transfer-progress -B -DskipTests \
-    # Remove devtools e docker-compose do JAR final (são optional,
-    # mas garantimos que não quebrem a imagem de produção)
-    && echo "Build concluído: $(ls -lh target/*.jar)"
+RUN ./mvnw package -DskipTests
 
 # ----------------------------------------------------------------
 # Stage 4 — Runtime
@@ -86,10 +83,7 @@ EXPOSE 8080
 # Configurações de JVM otimizadas para containers:
 #   UseContainerSupport  – respeita os limites de memória do container (cgroups)
 #   MaxRAMPercentage     – usa até 75% da RAM disponível para o heap
-#   docker.compose       – desativa o spring-boot-docker-compose (que tenta subir
-#                          o compose.yaml automaticamente em dev)
 ENTRYPOINT ["java", \
     "-XX:+UseContainerSupport", \
     "-XX:MaxRAMPercentage=75.0", \
-    "-Dspring.docker.compose.enabled=false", \
     "-jar", "app.jar"]
