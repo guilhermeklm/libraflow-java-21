@@ -23,7 +23,7 @@ jobs:
   test:
     name: Testes
     runs-on: ubuntu-latest  # VM Ubuntu fornecida pelo GitHub (tem Docker incluso)
-    environment: Development  # Usa as secrets e vars do environment criado no GitHub
+    environment: Desenvolvimento  # Usa as secrets e vars do environment criado no GitHub
 
     steps:
       # Baixa o código do repositório para a VM
@@ -62,7 +62,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: test  # Aguarda o job test terminar com sucesso
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    environment: Development  # Usa as secrets e vars do environment criado no GitHub
+    environment: Desenvolvimento  # Usa as secrets e vars do environment criado no GitHub
 
     permissions:
       contents: read   # Leitura do repositório
